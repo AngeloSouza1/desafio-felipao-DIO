@@ -1,5 +1,10 @@
 # Desafio - DIO🦸
 
+<p align="center">
+  <img src="https://github.com/AngeloSouza1/desafio-felipao-DIO/blob/main/hero.jpg" alt="Logo" width="700" height="400">
+</p>
+
+
 ---
 ### Entendendo o Desafio
 
