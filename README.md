@@ -4,6 +4,11 @@
   <img src="https://github.com/AngeloSouza1/desafio-felipao-DIO/blob/main/hero.jpg" alt="Logo" width="700" height="400">
 </p>
 
+💡 Veja!
+
+<a href="https://vimeo.com/939092868/65a3874f7c" target="_blank">
+  <img src="https://img.shields.io/badge/Assista_ao_Vídeo_de_Demonstração-DarkGreen" alt="Demonstração">
+</a>
 
 ---
 ### Entendendo o Desafio
@@ -49,4 +54,5 @@ Ao final deve se exibir uma mensagem:
 <br>
 
 #### "O Herói de nome **{nome}** está no nível de **{nivel}**
+
 
