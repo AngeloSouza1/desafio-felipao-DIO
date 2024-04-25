@@ -5,7 +5,7 @@ def clear_screen
   system "clear" or system "cls"
 end
 
-def print_menu(menu, selected_index, screen_width)
+def print_menu(menu, selected_index, screen_width, has_heroes)
   clear_screen
 
   # Cabeçalho centralizado
@@ -14,36 +14,60 @@ def print_menu(menu, selected_index, screen_width)
   puts "|#{header.center(screen_width - 2).colorize(background: :blue)}|"
   puts "+" + "-" * (screen_width - 2) + "+"
   puts "\n"
-  puts "\n"
 
   # Exibir menu centralizado
   menu.each_with_index do |item, index|
     if index == selected_index
-      puts "|#{item.center(screen_width - 4).colorize(:light_cyan).on_light_black}|"
+      puts " #{item.center(screen_width - 4).colorize(:light_cyan).on_light_black} "
     else
-      puts "|#{item.center(screen_width - 4)}|"
+      puts " #{item.center(screen_width - 4)} "
     end
   end
 
   puts "\n"
-  puts "\n"
-  puts "\n"
+  puts "Use as teclas 'w' e 's' para navegar, e 'Enter' para selecionar.".center(screen_width).colorize(:yellow)
+end
 
-  puts "Use as teclas 'w' e 's' para navegar, e 'Enter' para selecionar.".center(screen_width).colorize(:green)
+# Função para coletar heróis
+def coletar_herois(heroes, screen_width)
+  clear_screen
+  puts "+" + "-" * (screen_width - 2) + "+"
+  puts " Heróis coletados:".center(screen_width - 2).colorize(background: :blue, color: :white)
+  puts "+" + "-" * (screen_width - 2) + "+"
+  puts "\n"
+  puts "=" * screen_width
+  heroes.each_with_index do |hero, index|
+    nome_justificado = hero[:nome].ljust(20).colorize(:cyan)
+    xp_justificado = hero[:xp].to_s.rjust(10).colorize(:green)
+    nivel_justificado = hero[:nivel].ljust(20).colorize(:yellow)
+    puts "#{index + 1}. #{nome_justificado} -    XP: #{xp_justificado}  -    Nível:    #{nivel_justificado}".center(screen_width)
+  end
+  puts "=" * screen_width
+  puts "\nPressione Enter para voltar ao menu...".center(screen_width).colorize(:yellow)
+  gets
+end
+
+# Função para classificar heróis de forma descendente pelo XP
+def classificar_herois_descendente(heroes)
+  heroes.sort_by! { |hero| hero[:xp] }.reverse!
 end
 
 # Obtém o tamanho da tela
 screen_width = `tput cols`.to_i
 
+# Vetor para armazenar os heróis
+heroes = []
+
 loop do
   # Menu
   menu = [
     "Digitar novo herói",
+    (heroes.empty? ? "Mostrar heróis" : "Mostrar heróis (somente se houver heróis)"),
     "Sair"
   ]
 
   selected_index = 0
-  print_menu(menu, selected_index, screen_width)
+  print_menu(menu, selected_index, screen_width, !heroes.empty?)
 
   loop do
     # Captura a entrada do usuário
@@ -53,11 +77,11 @@ loop do
     when "\e[A", "w" # seta para cima ou "w"
       selected_index -= 1
       selected_index = menu.length - 1 if selected_index < 0
-      print_menu(menu, selected_index, screen_width)
+      print_menu(menu, selected_index, screen_width, !heroes.empty?)
     when "\e[B", "s" # seta para baixo ou "s"
       selected_index += 1
       selected_index = 0 if selected_index >= menu.length
-      print_menu(menu, selected_index, screen_width)
+      print_menu(menu, selected_index, screen_width, !heroes.empty?)
     when "\r" # Enter
       opcao = selected_index + 1
 
@@ -69,33 +93,26 @@ loop do
         puts " Novo herói".center(screen_width - 2).colorize(background: :blue)
         puts "+" + "-" * (screen_width - 2) + "+"
         puts "\n"
-
         puts "\n"
         puts "\n"
         puts "\n"
-        puts "\n"
-
-
         print "                                 Nome do herói: > "
         nome = gets.chomp
         puts "\n"
         xp = nil
         loop do
-          print "                                 Quantidade de experiência (XP): > "
+          print "                                 Quantidade de experiência (XP - Máximo 7 caracteres): > "
           xp_input = gets.chomp
-
-          if xp_input.match?(/^\d+$/) # Verifica se a entrada contém apenas dígitos
+          if xp_input.match?(/^\d{1,7}$/) # Verifica se a entrada contém no máximo 7 dígitos
             xp = xp_input.to_i
             break
           else
-            puts "                                 Por favor, insira um número válido.".colorize(:red)
+            puts "                                 Por favor, insira um número válido (no máximo 7 caracteres).".colorize(:red)
             puts "\n"
           end
         end
 
-
-
-        # Exibe a mensagem com o nome do herói e seu nível
+        # Define o nível do herói
         nivel = if xp < 1000
                   "Ferro"
                 elsif xp <= 2000
@@ -113,12 +130,14 @@ loop do
                 else
                   "Radiante"
                 end
+
+        # Adiciona o herói ao vetor
+        heroes << { nome: nome, xp: xp, nivel: nivel }
         puts "\n"
         puts "\n"
         puts "\n"
 
-        # Define o texto da mensagem
-
+        # Exibe a mensagem com o nome do herói e seu nível
         mensagem = "O Herói de nome #{nome} está no nível de #{nivel}."
         puts "+" + "=" * (screen_width - 2) + "+"
         puts "|" + mensagem.center(screen_width - 2).colorize(:light_green) + "|"
@@ -129,37 +148,19 @@ loop do
         puts "Pressione Enter para continuar...".center(screen_width).colorize(:green)
         gets
       when 2
-         clear_screen
-        # Obtém o tamanho da tela
-        screen_width = `tput cols`.to_i
-        screen_height = `tput lines`.to_i
-
-        # Calcula o deslocamento horizontal para centralizar a mensagem
-        horizontal_start = (screen_width / 2) - ("Programa encerrado...".length / 2)
-
-        # Calcula o deslocamento vertical para centralizar a mensagem
-        vertical_start = (screen_height / 2)
-
-        # Imprime a borda superior
+        if !heroes.empty?
+          classificar_herois_descendente(heroes)
+          coletar_herois(heroes, screen_width)
+        end
+      when 3
+        # Encerra o programa
+        clear_screen
         puts "+" + "-" * (screen_width - 2) + "+"
-
-        # Imprime a mensagem de encerramento centralizada na tela
-        puts "|" + "Programa encerrado...".center(screen_width - 2).colorize(background: :cyan) + "|"
-
-        # Imprime a borda inferior
+        puts " Programa encerrado... ".center(screen_width - 2).colorize(background: :cyan) + "  "
         puts "+" + "-" * (screen_width - 2) + "+"
-
-        # Aguarda 3 segundos
-        sleep(1.5)
-
-        # Limpa a tela e encerra o programa
+        sleep(1)
         clear_screen
         exit
-
-
-
-
-
       end
       break
     end
