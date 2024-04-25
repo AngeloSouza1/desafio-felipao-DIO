@@ -40,10 +40,16 @@ def coletar_herois(heroes, screen_width)
     nome_justificado = hero[:nome].ljust(20).colorize(:cyan)
     xp_justificado = hero[:xp].to_s.rjust(10).colorize(:green)
     nivel_justificado = hero[:nivel].ljust(20).colorize(:yellow)
-    puts "#{index + 1}. #{nome_justificado} -    XP: #{xp_justificado}  -    Nível:    #{nivel_justificado}".center(screen_width)
+    puts "                                         #{index + 1}. #{nome_justificado} -    XP: #{xp_justificado}    -      Nível:    #{nivel_justificado}".center(screen_width)
+
+
   end
   puts "=" * screen_width
-  puts "\nPressione Enter para voltar ao menu...".center(screen_width).colorize(:yellow)
+  puts "\n"
+  puts "\n"
+
+  puts "Pressione Enter para voltar ao menu...".center(screen_width).colorize(:yellow)
+
   gets
 end
 
