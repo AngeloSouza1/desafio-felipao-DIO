@@ -96,8 +96,18 @@ loop do
         puts "\n"
         puts "\n"
         puts "\n"
-        print "                                 Nome do herói: > "
-        nome = gets.chomp
+
+        nome = ''
+        loop do
+          print "                                 Nome do herói (Máximo 20 caracteres): > "
+          nome = gets.chomp.strip
+          if nome.empty? || nome.length > 20
+            puts "                                 O nome deve ter de 1 a 20 caracteres.".colorize(:red)
+            puts "\n"
+          else
+            break
+          end
+        end
         puts "\n"
         xp = nil
         loop do
