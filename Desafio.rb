@@ -63,6 +63,7 @@ loop do
   menu = [
     "Digitar novo herói",
     (heroes.empty? ? "Mostrar heróis" : "Mostrar heróis (somente se houver heróis)"),
+    "Sobre",
     "Sair"
   ]
 
@@ -163,6 +164,25 @@ loop do
           coletar_herois(heroes, screen_width)
         end
       when 3
+        # Sobre
+        clear_screen
+        puts "+" + "-" * (screen_width - 2) + "+"
+        puts " Sobre o Desafio Nível Herói ".center(screen_width - 2).colorize(background: :blue) + "  "
+        puts "+" + "-" * (screen_width - 2) + "+"
+        puts "\n"
+        puts "\n"
+        puts "\n"
+        puts "\n"
+        puts "\n"
+        puts "\n"
+        puts "\n"
+        puts "O Desafio Nível Herói é uma aplicação simples para gerenciar heróis,".center(screen_width).colorize(:light_yellow)
+        puts "onde você pode adicionar heróis com seus respectivos níveis de experiência (XP)".center(screen_width).colorize(:light_yellow)
+        puts "e visualizar a lista de heróis cadastrados, bem como suas informações.".center(screen_width).colorize(:light_yellow)
+        puts "\n"
+        puts "Pressione Enter para voltar ao menu...".center(screen_width).colorize(:yellow)
+        gets
+      when 4
         # Encerra o programa
         clear_screen
         puts "+" + "-" * (screen_width - 2) + "+"
